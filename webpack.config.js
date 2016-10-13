@@ -8,11 +8,17 @@ const PATHS = {
   bin: path.join(__dirname, 'bin')
 }
 
+const chunks = ['index', 'about'];
+
 module.exports = {
-  entry: PATHS.app + '/App',
+  entry: {
+   index: PATHS.app + '/App',
+   about: PATHS.app + '/About'
+  },
   output: {
     path: PATHS.bin,
-    filename: 'bundle.js'
+    filename: '[name].js',
+    chunkFilename: '[id].chunk.js'
   },
   devtool: 'eval-source-map',
   devServer: {
@@ -46,9 +52,32 @@ module.exports = {
     ]
   },
   plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendors',
+      chunks: chunks,
+      minChunks: chunks.length
+    }),
     new HtmlWebpackPlugin({
       template: PATHS.app + '/index.html',
-      inject: false
+      filename: PATHS.bin + '/index.html',
+      inject: 'body', 
+      hash: true, 
+      chunks: ['vendors', 'index'],
+      minify: {  
+          removeComments: true, 
+          collapseWhitespace: false 
+      }
+    }),
+    new HtmlWebpackPlugin({
+      template: PATHS.app + '/index.html',
+      filename: PATHS.bin + '/about.html',
+      inject: 'body', 
+      hash: true, 
+      chunks: ['vendors', 'about'],
+      minify: {  
+          removeComments: true, 
+          collapseWhitespace: false 
+      }
     }),
     new webpack.HotModuleReplacementPlugin()
   ]

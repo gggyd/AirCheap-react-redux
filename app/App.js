@@ -34,6 +34,7 @@ class App extends Component {
           <div className="header-brand">
           <img src="logo.png" height="35"/>
           <p>Check discount ticket prices and pay using your AirCheap points</p>
+          <a href="about.html">About</a>
           </div>
           <div className="header-route">
           <Select name="origin"
